@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brainergy Tax Platform — EXAT</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+
+<body>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text" id="loadingText" data-i18n="loadingText">กำลังทำงาน...</div>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+    <aside class="sidebar" id="mainSidebar">
+        <div class="sidebar-logo">
+            <div class="logo-brainergy" onclick="navigate('application')" id="logoHomeBtn" title="กลับหน้าหลัก" data-i18n-title="titleHome" style="cursor:pointer;padding:8px;display:flex;align-items:center;justify-content:center;">
+                <img src="../BAFS2/Images/BrainergyIcon.png" style="width:100%;height:64px;object-fit:contain;">
+            </div>
+        </div>
+        <nav class="nav">
+            <div class="nav-group-label">Management</div>
+            <div class="nav-item" id="nav-application" onclick="navigate('application')"><span class="nav-icon"><svg class="si" viewBox="0 0 24 24"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span> Application</div>
+            <div class="nav-item" id="nav-company" onclick="navigate('company')"><span class="nav-icon"><svg class="si" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22V12h6v10"/><path d="M9 7h.01M12 7h.01M15 7h.01M9 11h.01M12 11h.01M15 11h.01"/></svg></span> Company</div>
+            <div class="nav-item" id="nav-cpa" onclick="navigate('cpa')"><span class="nav-icon"><svg class="si" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="5.5"/><path d="M21 2l-9.6 9.6M15.5 7.5l3 3"/></svg></span> CPA</div>
+            <div class="nav-divider"></div>
+            <div class="nav-group-label">Reports</div>
+            <div class="nav-item" id="nav-status" onclick="navigate('status')"><span class="nav-icon"><svg class="si" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> RD Status Report</div>
+            <div class="nav-item" id="nav-daily" onclick="navigate('daily')"><span class="nav-icon"><svg class="si" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> RD Daily Report</div>
+            <div class="nav-item" id="nav-monthly" onclick="navigate('monthly')"><span class="nav-icon"><svg class="si" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span> RD Monthly Report</div>
+        </nav>
+    </aside>
+
+    <div class="main">
+        <div class="topbar">
+            <button class="hamburger" id="hamburgerBtn" onclick="openSidebar()" title="เมนู" data-i18n-title="titleMenu">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="breadcrumb">
+                <span>Platform</span>
+                <span class="sep">›</span>
+                <span class="current" id="breadcrumbCurrent">Application</span>
+            </div>
+            <div class="topbar-right">
+                <!-- Dark mode toggle -->
+                <button class="dark-toggle" id="darkToggleBtn" onclick="toggleDarkMode()" title="เปลี่ยน Theme" data-i18n-title="titleTheme">
+                    <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px;display:block;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    <svg id="iconSun"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px;display:none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                </button>
+                <!-- Language Toggle -->
+                <button class="dark-toggle" id="langToggleBtn" onclick="toggleLanguage()" title="เปลี่ยนภาษา / Change Language" data-i18n-title="titleLang" style="font-size:13px;font-weight:600;">TH</button>
+                <!-- Notification Bell -->
+                <div class="notif-wrap" id="notifWrap">
+                    <button class="notif-btn" onclick="toggleNotif(event)" title="การแจ้งเตือน" data-i18n-title="titleNotif">
+                        <svg class="si si-lg" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                        <span class="notif-badge" id="notifBadge">0</span>
+                    </button>
+                    <div class="notif-panel" id="notifPanel">
+                        <div class="notif-panel-hdr">
+                            <span class="notif-panel-title" style="display:flex;align-items:center;gap:6px"><svg class="si si-sm" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> <span data-i18n="notifTitle">การแจ้งเตือน</span></span>
+                            <button class="notif-mark-all" onclick="markAllRead()" data-i18n="markAllRead">อ่านทั้งหมด</button>
+                        </div>
+                        <div id="notifList"></div>
+                    </div>
+                </div>
+                <span style="font-size:12px;color:var(--text3)">EXAT Admin</span>
+                <div class="avatar">EA</div>
+            </div>
+        </div>
+
+        <div class="content">
+
+            <!-- ═══ APPLICATION PAGE ═══ -->
+            <div id="page-application" class="page-view active">
+                <div class="page-header">
+                    <div>
+                        <div class="page-title">Application List</div>
+                        <div class="page-subtitle" data-i18n="subtitleApp">จัดการ Application การส่งข้อมูล</div>
+                    </div>
+                    <div class="page-actions">
+                        <div class="export-wrap">
+                            <button class="btn-export" onclick="doExport('',exportAppsXLSX)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Export</button>
+                        </div>
+                        <button class="btn btn-primary" onclick="openCreateApp()">＋ Create</button>
+                    </div>
+                </div>
+                <div class="search-bar">
+                    <input class="input" id="searchAppName" placeholder="Application Name" style="width:200px">
+                    <select class="select" id="searchProtocol" style="width:160px">
+          <option value="">Protocol — All</option>
+          <option value="API">API</option>
+          <option value="Message Queue">Message Queue</option>
+        </select>
+                    <select class="select" id="searchStatus" style="width:140px">
+          <option value="">Status — All</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+                    <button class="btn btn-ghost btn-sm" onclick="resetSearchApp()">Default All</button>
+                    <div class="search-divider"></div>
+                    <button class="btn btn-primary btn-sm" onclick="filterApps()">🔍 Search</button>
+                </div>
+                <div class="table-topbar" id="appsTop"></div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Application Name</th>
+                                <th>Protocol</th>
+                                <th>Companies</th>
+                                <th>Created Date</th>
+                                <th>Updated Date</th>
+                                <th style="width:120px;text-align:center">Status</th>
+                                <th style="width:120px">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appTableBody"></tbody>
+                    </table>
+                    <div id="appPag"></div>
+                </div>
+            </div>
+
+            <!-- ═══ COMPANY PAGE ═══ -->
+            <div id="page-company" class="page-view" style="display:none;">
+                <div class="page-header">
+                    <div>
+                        <div class="page-title">Company List</div>
+                        <div class="page-subtitle" data-i18n="subtitleComp">จัดการข้อมูลบริษัท</div>
+                    </div>
+                    <div class="page-actions">
+                        <div class="export-wrap">
+                            <button class="btn-export" onclick="doExport('',exportCompaniesXLSX)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Export</button>
+                        </div>
+                        <button class="btn btn-primary" onclick="openCreateCompany()">＋ Create</button>
+                    </div>
+                </div>
+                <div class="search-bar">
+                    <input class="input" id="searchCompName" placeholder="Company Name" style="width:200px">
+                    <select class="select" id="searchCompApp" style="width:180px"><option value="">Application — All</option></select>
+                    <select class="select" id="searchCompStatus" style="width:140px">
+          <option value="">Status — All</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+                    <button class="btn btn-ghost btn-sm" onclick="resetSearchComp()">Default All</button>
+                    <div class="search-divider"></div>
+                    <button class="btn btn-primary btn-sm" onclick="filterCompanies()">🔍 Search</button>
+                </div>
+                <div class="table-topbar" id="companiesTop"></div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Company Name</th>
+                                <th>Tax ID</th>
+                                <th>Application Name</th>
+                                <th>CPA Remaining</th>
+                                <th>Created Date</th>
+                                <th>Updated Date</th>
+                                <th style="width:120px;text-align:center">Status</th>
+                                <th style="width:120px">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="compTableBody"></tbody>
+                    </table>
+                    <div id="compPag"></div>
+                </div>
+            </div>
+
+            <!-- ═══ CPA PAGE ═══ -->
+            <div id="page-cpa" class="page-view" style="display:none;">
+                <div class="page-header">
+                    <div>
+                        <div class="page-title">CPA</div>
+                        <div class="page-subtitle" data-i18n="subtitleCPA">จัดการ CPA Certificate สำหรับ e-Tax Invoice</div>
+                    </div>
+                    <div class="page-actions">
+                        <div class="export-wrap">
+                            <button class="btn-export" onclick="doExport('',exportCPAsXLSX)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Export</button>
+                        </div>
+                        <button class="btn btn-primary" onclick="openRegisterCPA()">＋ Register CPA</button>
+                    </div>
+                </div>
+                <div class="search-bar">
+                    <input class="input" id="searchCPAComp" placeholder="Company Name" style="width:200px">
+                    <select class="select" id="searchCPAStatus" style="width:160px">
+          <option value="">Status — All</option>
+          <option value="Active">Active</option>
+          <option value="Expiring Soon">Expiring Soon</option>
+          <option value="Expired">Expired</option>
+        </select>
+                    <button class="btn btn-ghost btn-sm" onclick="resetSearchCPA()">Default All</button>
+                    <div class="search-divider"></div>
+                    <button class="btn btn-primary btn-sm" onclick="filterCPAs()">🔍 Search</button>
+                </div>
+                <div class="table-topbar" id="cpasTop"></div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Company Name</th>
+                                <th>Tax ID</th>
+                                <th>Status</th>
+                                <th>Expired Date</th>
+                                <th>Created Date</th>
+                                <th style="width:160px">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cpaTableBody"></tbody>
+                    </table>
+                    <div id="cpaPag"></div>
+                </div>
+            </div>
+
+            <!-- ═══ RD STATUS REPORT PAGE ═══ -->
+            <div id="page-status" class="page-view" style="display:none;">
+            <div class="page-header">
+                <div>
+                    <div class="page-title">RD Status Report</div>
+                    <div class="page-subtitle" data-i18n="subtitleStatus">รายงานสถานะเอกสารและการตอบกลับจากกรมสรรพากร (ราย Transaction)</div>
+                </div>
+                <div class="page-actions">
+                    <div class="dropdown" style="position:relative;">
+                        <button type="button" class="btn btn-ghost btn-sm" data-action="toggleStatusColumnsDropdown">
+                            <i class="bi bi-gear"></i> Columns <i class="bi bi-chevron-down" style="font-size:10px;margin-left:4px;"></i>
+                        </button>
+                        <div class="dropdown-menu" id="statusColumnsDropdown" style="display:none;position:absolute;top:100%;right:0;background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:100;min-width:280px;">
+                            <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:10px;">Column Visibility</div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="invoiceNo" checked onchange="toggleStatusColumn('invoiceNo',this.checked)"> Invoice No.</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="docType" checked onchange="toggleStatusColumn('docType',this.checked)"> Document Type</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="submittedAt" checked onchange="toggleStatusColumn('submittedAt',this.checked)"> Submitted At</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="convId" checked onchange="toggleStatusColumn('convId',this.checked)"> Conversation ID</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="issueDate" checked onchange="toggleStatusColumn('issueDate',this.checked)"> Issue Date</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="status" checked onchange="toggleStatusColumn('status',this.checked)"> Status</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="rdMessage" checked onchange="toggleStatusColumn('rdMessage',this.checked)"> RD Message</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="action" checked onchange="toggleStatusColumn('action',this.checked)"> Action</label>
+                            </div>
+                            <div style="border-top:1px solid var(--border);padding-top:10px;">
+                                <button type="button" class="btn btn-ghost btn-xs" onclick="resetStatusColumns()" style="width:100%;justify-content:center;"><i class="bi bi-arrow-counterclockwise"></i> Reset to Default</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-export" data-action="exportStatusReport"><i class="bi bi-file-earmark-excel"></i> Export</button>
+                </div>
+            </div>
+            <div class="search-bar">
+                <div style="display:flex;flex-direction:column;gap:3px;"><label style="font-size:11px;">Document Type</label>
+                    <select class="select" id="statusFilterDocType" style="width:130px;"><option value="">ทั้งหมด</option><option value="Tax Invoice">Tax Invoice</option><option value="Receipt">Receipt</option></select>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:3px;"><label style="font-size:11px;">Submitted At</label>
+                    <input type="date" class="input" id="statusFilterSubmitDate" style="width:130px;">
+                </div>
+                <div style="display:flex;flex-direction:column;gap:3px;"><label style="font-size:11px;">Conversation ID</label>
+                    <input class="input" id="statusFilterConvId" placeholder="TP..." style="width:150px;">
+                </div>
+                <div style="display:flex;flex-direction:column;gap:3px;"><label style="font-size:11px;">Invoice No.</label>
+                    <input class="input" id="statusFilterInvoice" placeholder="เช่น TIV..." data-i18n-ph="phInvoiceSearch" style="width:130px;">
+                </div>
+                <div style="display:flex;flex-direction:column;gap:3px;"><label style="font-size:11px;">Issue Date</label>
+                    <input type="date" class="input" id="statusFilterIssueDate" style="width:130px;">
+                </div>
+                <div style="display:flex;flex-direction:column;gap:3px;"><label style="font-size:11px;">Status</label>
+                    <select class="select" id="statusFilterStatus" style="width:120px;"><option value="">ทั้งหมด</option><option value="await_response">Awaiting Response</option><option value="Accepted">Accepted</option><option value="Rejected">Rejected</option></select>
+                </div>
+                <button type="button" class="btn btn-ghost btn-sm" style="align-self:flex-end;" data-action="resetStatusFilter">Default All</button>
+                <button type="button" class="btn btn-primary btn-sm" style="align-self:flex-end;" data-action="filterStatusReport"><i class="bi bi-search"></i> Search</button>
+            </div>
+            <div class="stat-grid" id="statusStats" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));"></div>
+            <div class="table-wrap"><table><thead id="statusTableHead"></thead><tbody id="statusTableBody"></tbody></table></div>
+            <div class="pagination-bar">
+                <div class="limit-select"><span data-i18n="pagShow">แสดง</span> <select class="select" id="statusLimitSel" style="width:70px;padding:4px 8px;" onchange="filterStatusReport()"><option value="10">10</option><option value="20">20</option><option value="50">50</option></select> <span data-i18n="pagItems">รายการ</span></div>
+                <div class="pagination-controls" id="statusPagination"></div>
+                <div class="pagination-info" id="statusPagInfo"></div>
+            </div>
+            </div>
+
+            <!-- ═══ RD DAILY REPORT PAGE ═══ -->
+            <div id="page-daily" class="page-view" style="display:none;">
+            <div class="page-header">
+                <div>
+                    <div class="page-title">RD Daily Report</div>
+                    <div class="page-subtitle" data-i18n="subtitleDaily">รายงานการส่งข้อมูลให้กรมสรรพากร (จัดกลุ่มตามรอบเวลา)</div>
+                </div>
+                <div class="page-actions">
+                    <div class="dropdown" style="position:relative;">
+                        <button type="button" class="btn btn-ghost btn-sm" data-action="toggleDailyColumnsDropdown">
+                            <i class="bi bi-gear"></i> Columns <i class="bi bi-chevron-down" style="font-size:10px;margin-left:4px;"></i>
+                        </button>
+                        <div class="dropdown-menu" id="dailyColumnsDropdown" style="display:none;position:absolute;top:100%;right:0;background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:100;min-width:280px;">
+                            <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:10px;">Column Visibility</div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="invoiceNo" checked onchange="toggleDailyColumn('invoiceNo',this.checked)"> Invoice No.</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="company" checked onchange="toggleDailyColumn('company',this.checked)"> Company</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="docType" checked onchange="toggleDailyColumn('docType',this.checked)"> Document Type</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="submittedAt" checked onchange="toggleDailyColumn('submittedAt',this.checked)"> Submitted At</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="convId" checked onchange="toggleDailyColumn('convId',this.checked)"> Conversation ID</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="actionDate" checked onchange="toggleDailyColumn('actionDate',this.checked)"> Date Action</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="issueDate" checked onchange="toggleDailyColumn('issueDate',this.checked)"> Issue Date</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="status" checked onchange="toggleDailyColumn('status',this.checked)"> Status</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="rdMessage" checked onchange="toggleDailyColumn('rdMessage',this.checked)"> RD Message</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="action" checked onchange="toggleDailyColumn('action',this.checked)"> Action</label>
+                            </div>
+                            <div style="border-top:1px solid var(--border);padding-top:10px;">
+                                <button type="button" class="btn btn-ghost btn-xs" onclick="resetDailyColumns()" style="width:100%;justify-content:center;"><i class="bi bi-arrow-counterclockwise"></i> Reset to Default</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-export" data-action="exportDailyReport"><i class="bi bi-file-earmark-excel"></i> Export</button>
+                </div>
+            </div>
+            <div class="search-bar">
+                <div style="display:flex;flex-direction:column;gap:3px;"><label style="font-size:11px;" data-i18n="labelDate">วันที่ (Date)</label>
+                    <input type="date" class="input" id="dailyFilterDate" style="width:140px;" onchange="filterDailyReport()">
+                </div>
+                <div style="display:flex;flex-direction:column;gap:3px;"><label style="font-size:11px;">Status</label>
+                    <select class="select" id="dailyFilterStatus" style="width:130px;" onchange="filterDailyReport()">
+                        <option value="">ทั้งหมด</option><option value="await_response">Awaiting Response</option><option value="Accepted">Accepted</option><option value="Rejected">Rejected</option>
+                    </select>
+                </div>
+                <div style="flex:1;"></div>
+                <button type="button" class="btn btn-ghost btn-sm" style="align-self:flex-end;" data-action="resetDailyFilter">Default All</button>
+                <button type="button" class="btn btn-primary btn-sm" style="align-self:flex-end;" data-action="filterDailyReport"><i class="bi bi-search"></i> Search</button>
+            </div>
+            <div class="stat-grid" id="dailyStats" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));"></div>
+            <div class="table-wrap"><table><thead id="dailyTableHead"></thead><tbody id="dailyTableBody"></tbody></table></div>
+            <div class="pagination-bar">
+                <div class="limit-select"><span data-i18n="pagShow">แสดง</span> <select class="select" id="dailyLimitSel" style="width:70px;padding:4px 8px;" onchange="filterDailyReport()"><option value="10">10</option><option value="20">20</option><option value="50">50</option></select> <span data-i18n="pagItems">รายการ</span></div>
+                <div class="pagination-controls" id="dailyPagination"></div>
+                <div class="pagination-info" id="dailyPagInfo"></div>
+            </div>
+            </div>
+
+            <!-- ═══ RD MONTHLY REPORT PAGE ═══ -->
+            <div id="page-monthly" class="page-view" style="display:none;">
+            <div class="page-header">
+                <div>
+                    <div class="page-title">RD Monthly Report</div>
+                    <div class="page-subtitle" data-i18n="subtitleMonthly">รายงานสรุปการส่งข้อมูลให้กรมสรรพากร (รายเดือน)</div>
+                </div>
+                <div class="page-actions">
+                    <div class="dropdown" style="position:relative;">
+                        <button type="button" class="btn btn-ghost btn-sm" data-action="toggleMonthlyColumnsDropdown">
+                            <i class="bi bi-gear"></i> Columns <i class="bi bi-chevron-down" style="font-size:10px;margin-left:4px;"></i>
+                        </button>
+                        <div class="dropdown-menu" id="monthlyColumnsDropdown" style="display:none;position:absolute;top:100%;right:0;background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:100;min-width:280px;">
+                            <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:10px;">Column Visibility</div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="date" checked onchange="toggleMonthlyColumn('date',this.checked)"> Date</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="company" checked onchange="toggleMonthlyColumn('company',this.checked)"> Company</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="taxId" checked onchange="toggleMonthlyColumn('taxId',this.checked)"> Tax ID</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="total" checked onchange="toggleMonthlyColumn('total',this.checked)"> Total Document</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="await_response" checked onchange="toggleMonthlyColumn('await_response',this.checked)"> Awaiting Response</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="accepted" checked onchange="toggleMonthlyColumn('accepted',this.checked)"> Accepted</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="rejected" checked onchange="toggleMonthlyColumn('rejected',this.checked)"> Rejected</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="lastSubmit" checked onchange="toggleMonthlyColumn('lastSubmit',this.checked)"> Last Submitted</label>
+                                <label style="display:flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;"><input type="checkbox" data-col="action" checked onchange="toggleMonthlyColumn('action',this.checked)"> Action</label>
+                            </div>
+                            <div style="border-top:1px solid var(--border);padding-top:10px;">
+                                <button type="button" class="btn btn-ghost btn-xs" onclick="resetMonthlyColumns()" style="width:100%;justify-content:center;"><i class="bi bi-arrow-counterclockwise"></i> Reset to Default</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-export" data-action="exportMonthlyReport"><i class="bi bi-file-earmark-excel"></i> Export</button>
+                </div>
+            </div>
+            <div class="search-bar">
+                <div style="display:flex;flex-direction:column;gap:3px;"><label style="font-size:11px;" data-i18n="labelYear">ปี (Year)</label>
+                    <select class="select" id="monthlyFilterYear" style="width:100px;"></select>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:3px;"><label style="font-size:11px;" data-i18n="labelMonth">เดือน (Month)</label>
+                    <select class="select" id="monthlyFilterMonth" style="width:130px;"></select>
+                </div>
+                <div style="flex:1;"></div>
+                <button type="button" class="btn btn-ghost btn-sm" style="align-self:flex-end;" data-action="resetMonthlyFilter">Default All</button>
+                <button type="button" class="btn btn-primary btn-sm" style="align-self:flex-end;" data-action="filterMonthlyReport"><i class="bi bi-search"></i> Search</button>
+            </div>
+            <div class="stat-grid" id="monthlyStats" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));"></div>
+            <div class="table-wrap"><table><thead id="monthlyTableHead"></thead><tbody id="monthlyTableBody"></tbody></table></div>
+            <div class="pagination-bar">
+                <div class="limit-select"><span data-i18n="pagShow">แสดง</span> <select class="select" id="monthlyLimitSel" style="width:70px;padding:4px 8px;" onchange="filterMonthlyReport()"><option value="10">10</option><option value="20">20</option><option value="31">31</option><option value="50">50</option></select> <span data-i18n="pagItems">รายการ</span></div>
+                <div class="pagination-controls" id="monthlyPagination"></div>
+                <div class="pagination-info" id="monthlyPagInfo"></div>
+            </div>
+            </div>
+
+        </div>
+        <!-- /content -->
+    </div>
+    <!-- /main -->
+
+    <!-- ═══ RD MODALS ═══ -->
+
+    <!-- RD Response Detail Modal -->
+    <div class="overlay" id="overlayRDDetail">
+        <div class="modal" style="width:660px;">
+            <div class="modal-header">
+                <span class="modal-title">📑 RD Response Detail</span>
+                <button type="button" class="close-btn" data-action="closeModal" data-modal="overlayRDDetail">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row"><label>Conversation ID</label><input class="input input-readonly mono" id="rdDetailConvId" readonly></div>
+                <div class="form-row"><label>Status</label><input class="input input-readonly" id="rdDetailStatus" readonly></div>
+                <div class="form-row">
+                    <label>RD Message / Raw Response</label>
+                    <div style="border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+                        <div class="code-tab-bar">
+                            <button type="button" class="code-tab-btn active" id="codeBtnJson" data-action="switchCodeTab" data-tab="json">JSON</button>
+                            <button type="button" class="code-tab-btn" id="codeBtnHtml" data-action="switchCodeTab" data-tab="html">HTML</button>
+                            <button type="button" class="code-tab-btn" id="codeBtnXml" data-action="switchCodeTab" data-tab="xml">XML</button>
+                        </div>
+                        <div class="code-content active" id="codeJson"><textarea class="rd-code-area" id="rdDetailJson" rows="10" readonly></textarea></div>
+                        <div class="code-content" id="codeHtml"><div id="rdDetailHtml" style="padding:14px;min-height:140px;font-size:13px;line-height:1.6;"></div></div>
+                        <div class="code-content" id="codeXml"><textarea class="rd-code-area" id="rdDetailXml" rows="10" readonly style="color:#93c5fd;"></textarea></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer"><button type="button" class="btn btn-outline" data-action="closeModal" data-modal="overlayRDDetail">Close</button></div>
+        </div>
+    </div>
+
+    <!-- Status History Modal -->
+    <div class="overlay" id="overlayStatusHistory">
+        <div class="modal" style="width:900px;">
+            <div class="modal-header">
+                <span class="modal-title">🕐 Status History</span>
+                <button type="button" class="close-btn" data-action="closeModal" data-modal="overlayStatusHistory">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row"><label>Conversation ID</label><input class="input input-readonly mono" id="statusHistConvId" readonly></div>
+                <div class="form-row"><label>Invoice No.</label><input class="input input-readonly" id="statusHistInvoice" readonly></div>
+                <div class="form-row"><label>Current Status</label><input class="input input-readonly" id="statusHistCurrentStatus" readonly></div>
+                <div class="table-wrap" style="margin-top:12px;">
+                    <table>
+                        <thead><tr>
+                            <th style="text-align:center;width:50px;">#</th>
+                            <th style="width:180px;">Timestamp</th>
+                            <th style="text-align:center;width:140px;">Status</th>
+                            <th>Message / Reason</th>
+                        </tr></thead>
+                        <tbody id="statusHistTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer"><button type="button" class="btn btn-outline" data-action="closeModal" data-modal="overlayStatusHistory">Close</button></div>
+        </div>
+    </div>
+
+    <!-- App Detail Modal (for Monthly Report drill-down) -->
+    <div class="overlay" id="overlayAppDetailReport">
+        <div class="modal" style="width:900px;">
+            <div class="modal-header">
+                <span class="modal-title" id="appModalTitle" data-i18n-html="appModalTitleDefault">📑 รายละเอียดบริษัท</span>
+                <button type="button" class="close-btn" data-action="closeModal" data-modal="overlayAppDetailReport">✕</button>
+            </div>
+            <div class="modal-body" style="padding:16px 22px;">
+                <div id="appModalSubTitle" style="margin-bottom:16px;font-size:13.5px;color:var(--text2);padding:10px;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border);"></div>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr>
+                            <th>Company</th>
+                            <th style="text-align:right;">Total Document</th>
+                            <th style="text-align:right;">Awaiting Response</th>
+                            <th style="text-align:right;">Accepted</th>
+                            <th style="text-align:right;">Rejected</th>
+                            <th style="text-align:center;">Status</th>
+                            <th style="text-align:center;width:100px;">Action</th>
+                        </tr></thead>
+                        <tbody id="appModalTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer"><button type="button" class="btn btn-outline" data-action="closeModal" data-modal="overlayAppDetailReport">Close</button></div>
+        </div>
+    </div>
+
+    <!-- ═══ MANAGEMENT MODALS ═══ -->
+
+    <!-- Create Application -->
+    <div class="overlay" id="overlayCreateApp">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title" style="display:flex;align-items:center;gap:7px"><svg class="si si-md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Create New Application</span>
+                <button class="close-btn" onclick="closeModal('overlayCreateApp')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row"><label>Application Name</label><input class="input" id="newAppName" placeholder="เช่น AOT SmartTax" data-i18n-ph="phAppName"></div>
+                <div class="form-row"><label>Protocol</label>
+                    <select class="select" id="newAppProtocol" onchange="onProtocolChange('new')">
+          <option value="">— Select Protocol —</option>
+          <option value="API">API</option>
+          <option value="Message Queue">Message Queue</option>
+        </select>
+                </div>
+                <div id="newApiConfig" style="display:none">
+                    <div class="form-row" style="margin-bottom:10px"><label>URL</label><input class="input" id="newAppUrl" placeholder="https://app.example.com"></div>
+                    <label style="margin-bottom:8px;display:block">Headers</label>
+                    <div id="newHeadersList"></div>
+                    <button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="addHeader('new')">＋ Add Header</button>
+                </div>
+                <div id="newMqConfig" style="display:none">
+                    <div class="form-row"><label>Connect URL</label><input class="input" id="newMqUrl" placeholder="amqp://username:password@rabbitmq.example.com:5672//"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('overlayCreateApp')">Cancel</button>
+                <button class="btn btn-primary" onclick="createApp()">Create Application</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View/Edit Application -->
+    <div class="overlay" id="overlayViewApp">
+        <div class="modal modal-xl">
+            <div class="modal-header">
+                <span class="modal-title" id="appDetailModalTitle" style="display:flex;align-items:center;gap:7px"><svg class="si si-md" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Application Detail</span>
+                <button class="close-btn" onclick="closeModal('overlayViewApp')">✕</button>
+            </div>
+            <div class="modal-body" id="appDetailBody">
+                <div class="name-edit-row">
+                    <div class="form-row">
+                        <label>Application Name</label>
+                        <input class="input input-readonly" id="viewAppName" readonly>
+                    </div>
+                    <button class="btn btn-outline btn-sm" id="btnEditApp" onclick="enterAppEditMode()" style="margin-bottom:0;flex-shrink:0"><svg class="si si-sm" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg> Edit</button>
+                </div>
+                <div class="form-row">
+                    <label>Status</label>
+                    <select class="select input-readonly" id="viewAppStatus" disabled>
+          <option value="Active">Active</option><option value="Inactive">Inactive</option>
+        </select>
+                </div>
+                <div class="form-row">
+                    <label>Protocol</label>
+                    <select class="select input-readonly" id="viewAppProtocol" disabled onchange="onProtocolChange('view')">
+          <option value="API">API</option><option value="Message Queue">Message Queue</option>
+        </select>
+                </div>
+                <div id="viewApiConfig">
+                    <div class="form-row" style="margin-bottom:10px"><label>URL</label><input class="input input-readonly" id="viewAppUrl" readonly></div>
+                    <label style="margin-bottom:8px;display:block">Headers</label>
+                    <div id="viewHeadersList"></div>
+                    <div id="viewAddHeaderBtn" style="display:none">
+                        <button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="addHeader('view')">＋ Add Header</button>
+                    </div>
+                </div>
+                <div id="viewMqConfig" style="display:none">
+                    <div class="form-row"><label>Connect URL</label><input class="input input-readonly" id="viewMqUrl" readonly></div>
+                </div>
+                <div id="appEditActions" style="display:none;justify-content:flex-end;gap:8px;padding:12px 0 0;border-top:2px solid var(--primary-dim);margin-top:8px">
+                    <button class="btn btn-danger-solid" onclick="cancelAppEdit()">✕ Cancel</button>
+                    <button class="btn btn-success" onclick="saveApp()"><svg class="si si-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save</button>
+                </div>
+            </div>
+            <div class="section-label">
+                🔐 Token List
+                <button class="btn btn-outline btn-sm" id="btnGenToken" onclick="openGenerateToken()"><svg class="si si-sm" viewBox="0 0 24 24"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Generate Token</button>
+            </div>
+            <div style="padding:0 22px 14px">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Host</th>
+                                <th>Token</th>
+                                <th>Status</th>
+                                <th>Created Date</th>
+                                <th id="tokenActionCol" style="width:90px">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tokenTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="section-label">
+                🏢 Company List
+                <span style="font-size:11px;color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0" data-i18n="compLinkedNote">แสดงเฉพาะ Company ที่ผูกกับ Application นี้</span>
+            </div>
+            <div style="padding:0 22px 20px">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Company Name</th>
+                                <th>Tax ID</th>
+                                <th>Application</th>
+                                <th>CPA Remaining</th>
+                                <th>Created Date</th>
+                                <th>Updated Date</th>
+                                <th style="width:80px;text-align:center">Status</th>
+                                <th id="compRemoveCol" style="width:80px;display:none"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="appCompTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generate Token -->
+    <div class="overlay" id="overlayGenToken">
+        <div class="modal" style="width:440px">
+            <div class="modal-header">
+                <span class="modal-title" style="display:flex;align-items:center;gap:7px"><svg class="si si-md" viewBox="0 0 24 24"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Generate Token</span>
+                <button class="close-btn" onclick="closeModal('overlayGenToken')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row"><label>Host</label><input class="input" id="genTokenHost" placeholder="IP Address or Domain Name"></div>
+                <div class="form-row"><label>Expired Date</label><input class="input" id="genTokenExpiry" type="date" placeholder='Default "No Expire"'></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('overlayGenToken')">Cancel</button>
+                <button class="btn btn-primary" onclick="generateToken()"><svg class="si si-sm" viewBox="0 0 24 24"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Generate</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Company -->
+    <div class="overlay" id="overlayAssignCompany">
+        <div class="modal" style="width:520px">
+            <div class="modal-header">
+                <span class="modal-title" style="display:flex;align-items:center;gap:7px"><svg class="si si-md" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Assign Company</span>
+                <button class="close-btn" onclick="closeModal('overlayAssignCompany')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="font-size:13px;color:var(--text2);margin-bottom:4px"><span data-i18n="assignSelectPrefix">เลือก Company ที่ต้องการผูกกับ</span> <strong id="assignAppName">—</strong></div>
+                <div style="font-size:11px;color:var(--text3);margin-bottom:12px" data-i18n="compUnlinkedNote">แสดงเฉพาะ Company ที่ยังไม่ได้ผูกกับ Application ใด</div>
+                <div class="table-wrap" style="max-height:320px;overflow-y:auto">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width:36px"></th>
+                                <th>Company Name</th>
+                                <th>Tax ID</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assignCompTableBody"></tbody>
+                    </table>
+                </div>
+                <div id="assignNoData" style="display:none;text-align:center;padding:20px;color:var(--text3);font-size:13px" data-i18n="assignNoData">ไม่มี Company ที่สามารถ Assign ได้</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('overlayAssignCompany')">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmAssignCompany()">✔ Assign</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Company -->
+    <div class="overlay" id="overlayCreateComp">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title" style="display:flex;align-items:center;gap:7px"><svg class="si si-md" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> Create New Company</span>
+                <button class="close-btn" onclick="closeModal('overlayCreateComp')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row"><label>Company Name</label><input class="input" id="newCompName" placeholder="เช่น EXATHQ" data-i18n-ph="phCompName"></div>
+                <div class="form-row"><label data-i18n="labelTaxId">Tax ID (13 หลัก)</label><input class="input" id="newCompTax" placeholder="0000000000000" maxlength="13"></div>
+                <div class="form-row"><label>Email</label><input class="input" id="newCompEmail" placeholder="example@exat.co.th" type="email"></div>
+                <div class="form-row"><label>RD URL Reference</label><input class="input" id="newCompRD" placeholder="https://rdservice.rd.go.th/..."></div>
+                <div class="form-row"><label>Application</label><select class="select" id="newCompApp"></select></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('overlayCreateComp')">Cancel</button>
+                <button class="btn btn-primary" onclick="createCompany()">Create Company</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View/Edit Company -->
+    <div class="overlay" id="overlayViewComp">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="modal-title" style="display:flex;align-items:center;gap:7px"><svg class="si si-md" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22V12h6v10"/><path d="M9 7h.01M12 7h.01M15 7h.01M9 11h.01M12 11h.01M15 11h.01"/></svg> Company Detail</span>
+                <button class="close-btn" onclick="closeModal('overlayViewComp')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="name-edit-row">
+                    <div class="form-row">
+                        <label>Company Name</label>
+                        <input class="input input-readonly" id="viewCompName" readonly>
+                    </div>
+                    <button class="btn btn-outline btn-sm" id="btnEditComp" onclick="enterCompEditMode()" style="flex-shrink:0"><svg class="si si-sm" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg> Edit</button>
+                </div>
+                <div class="form-row"><label>Tax ID</label><input class="input input-readonly mono" id="viewCompTax" readonly></div>
+                <div class="form-row"><label>Email</label><input class="input input-readonly" id="viewCompEmail" readonly></div>
+                <div class="form-row"><label>RD URL Reference</label><input class="input input-readonly" id="viewCompRD" readonly></div>
+                <div class="form-row"><label>Application</label><input class="input input-readonly" id="viewCompApp" readonly></div>
+                <div class="form-row"><label>Status</label>
+                    <select class="select input-readonly" id="viewCompStatus" disabled>
+          <option value="Active">Active</option><option value="Inactive">Inactive</option>
+        </select>
+                </div>
+                <div class="form-row"><label>CPA Remaining</label><input class="input input-readonly" id="viewCompCPA" readonly></div>
+            </div>
+            <div class="modal-footer" id="compEditFooter" style="display:none">
+                <button class="btn btn-danger-solid" onclick="cancelCompEdit()">✕ Cancel</button>
+                <button class="btn btn-success" onclick="saveComp()"><svg class="si si-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CPA Register — Multi-step wizard -->
+    <div class="overlay" id="overlayCreateCPA">
+        <div class="modal" style="width:680px">
+            <div class="modal-header">
+                <div style="display:flex;flex-direction:column;gap:6px;flex:1">
+                    <span class="modal-title" id="cpaWizardTitle" style="display:flex;align-items:center;gap:7px"><svg class="si si-md" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> <span data-i18n="wizTitle1">นัดหมายกับ RD</span></span>
+                    <div style="display:flex;align-items:center;gap:0;margin-top:2px">
+                        <div class="cpa-step active" id="cpaStep1Dot">
+                            <span class="cpa-step-num">1</span>
+                            <span class="cpa-step-label" data-i18n="wizLabel1">นัดหมายกับ RD</span>
+                        </div>
+                        <div class="cpa-step-line"></div>
+                        <div class="cpa-step" id="cpaStep2Dot">
+                            <span class="cpa-step-num">2</span>
+                            <span class="cpa-step-label">Register CPA UAT</span>
+                        </div>
+                        <div class="cpa-step-line"></div>
+                        <div class="cpa-step" id="cpaStep3Dot">
+                            <span class="cpa-step-num">3</span>
+                            <span class="cpa-step-label">Upload XML</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="close-btn" onclick="closeModal('overlayCreateCPA')" style="align-self:flex-start;margin-top:2px">✕</button>
+            </div>
+            <div id="cpaWizardStep1">
+                <div class="modal-body" style="gap:14px">
+                    <!-- Intro box -->
+                    <div style="background:linear-gradient(135deg,#eff6ff,#e0f2fe);border:1px solid #bae6fd;border-radius:10px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start">
+                        <div style="font-size:28px;line-height:1;flex-shrink:0">🏛️</div>
+                        <div>
+                            <div style="font-size:14px;font-weight:700;color:#0c4a6e;margin-bottom:4px" data-i18n="cpaTitleRequest">ขอ CPA Certificate จากกรมสรรพากร</div>
+                            <div style="font-size:12px;color:#075985;line-height:1.6" data-i18n="cpaDescRequest">ก่อนเริ่มใช้งานระบบ Host to Host กับกรมสรรพากร ผู้ประกอบการต้องยื่นเรื่องขอรับ CPA Certificate (Client Certificate) เพื่อพิสูจน์ตัวตนในการส่งข้อมูลอิเล็กทรอนิกส์</div>
+                        </div>
+                    </div>
+                    <!-- Steps -->
+                    <div style="display:flex;flex-direction:column;gap:0">
+                        <div class="rd-step-row">
+                            <div class="rd-step-icon" style="background:#dbeafe;color:#1d4ed8">1</div>
+                            <div class="rd-step-body">
+                                <div class="rd-step-title" data-i18n="cpaStep1Title">ยื่นหนังสือแจ้งความประสงค์</div>
+                                <div class="rd-step-desc" data-i18n-html="cpaStep1Desc">ติดต่อกองบริหารการเสียภาษีทางอิเล็กทรอนิกส์ กรมสรรพากร ชั้น 21 อาคารกรมสรรพากร<br> 📞 โทร. <strong>02 272 9771</strong> หรือ <a href="https://etax.rd.go.th" target="_blank" style="color:var(--primary)">etax.rd.go.th</a></div>
+                            </div>
+                        </div>
+                        <div class="rd-step-connector"></div>
+                        <div class="rd-step-row">
+                            <div class="rd-step-icon" style="background:#dcfce7;color:#15803d">2</div>
+                            <div class="rd-step-body">
+                                <div class="rd-step-title" data-i18n="cpaStep2Title">เตรียมเอกสารที่ต้องใช้</div>
+                                <div class="rd-step-desc">
+                                    <div class="rd-doc-list">
+                                        <div class="rd-doc-item" data-i18n="cpaDoc1">📄 หนังสือแจ้งความประสงค์ขอเชื่อมต่อระบบ Host to Host (บ.อ.01)</div>
+                                        <div class="rd-doc-item" data-i18n="cpaDoc2">📄 สำเนาหนังสือรับรองบริษัท (ไม่เกิน 6 เดือน)</div>
+                                        <div class="rd-doc-item" data-i18n="cpaDoc3">📄 สำเนาบัตรประชาชนผู้มีอำนาจลงนาม</div>
+                                        <div class="rd-doc-item" data-i18n="cpaDoc4">📄 ข้อมูล IP Address และ Endpoint ของระบบ</div>
+                                        <div class="rd-doc-item" data-i18n="cpaDoc5">📄 SSL Certificate ของ Server</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rd-step-connector"></div>
+                        <div class="rd-step-row">
+                            <div class="rd-step-icon" style="background:#fef9c3;color:#854d0e">3</div>
+                            <div class="rd-step-body">
+                                <div class="rd-step-title" data-i18n="cpaStep3Title">รอผลการพิจารณา</div>
+                                <div class="rd-step-desc" data-i18n-html="cpaStep3Desc">กรมสรรพากรจะพิจารณาคุณสมบัติและแจ้งผลทางอีเมลที่ลงทะเบียนไว้ภายใน <strong>5–10 วันทำการ</strong><br> เมื่อผ่านการพิจารณา กรมสรรพากรจะออก CPA (UAT) ให้เพื่อทดสอบการส่งข้อมูล</div>
+                            </div>
+                        </div>
+                        <div class="rd-step-connector"></div>
+                        <div class="rd-step-row">
+                            <div class="rd-step-icon" style="background:#f3e8ff;color:#7e22ce">4</div>
+                            <div class="rd-step-body">
+                                <div class="rd-step-title" data-i18n="cpaStep4Title">ดาวน์โหลด CPA (UAT) และตั้งค่าระบบ</div>
+                                <div class="rd-step-desc" data-i18n="cpaStep4Desc">ดาวน์โหลด CPA Certificate สำหรับทดสอบจากอีเมลที่กรมสรรพากรส่งให้ นำไป Register ในระบบเพื่อเริ่มทดสอบส่งข้อมูล 4 ประเภท ได้แก่ TIV, DBN, CDN, RCT</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Info note -->
+                    <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:12px 14px;font-size:12px;color:#92400e;display:flex;gap:10px;align-items:flex-start">
+                        <span style="font-size:16px;flex-shrink:0">💡</span>
+                        <div data-i18n-html="cpaNextNote">หลังจากได้รับ CPA (UAT) จากกรมสรรพากรแล้ว กด <strong>"Next"</strong> เพื่อไปยังขั้นตอน Register CPA เข้าระบบ และเริ่มทดสอบการส่งข้อมูล</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" onclick="closeModal('overlayCreateCPA')" data-i18n="btnClose">ปิด</button>
+                    <button class="btn btn-primary" onclick="cpaWizardNext(1)">Next → Register CPA UAT</button>
+                </div>
+            </div>
+            <div id="cpaWizardStep2" style="display:none">
+                <div class="modal-body" style="gap:16px">
+                    <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:11px 14px;font-size:12px;color:#14532d;display:flex;gap:8px;align-items:center" data-i18n-html="cpaStep2Header">
+                        <span style="font-size:15px">✅</span> ได้รับ CPA (UAT) จากกรมสรรพากรแล้ว กรอกข้อมูลด้านล่างเพื่อ Register เข้าระบบ
+                    </div>
+                    <div class="form-row">
+                        <label>Company</label>
+                        <select class="select" id="newCPAComp"></select>
+                    </div>
+                    <div class="form-row">
+                        <label>Path <span style="font-weight:400;color:var(--text3)" data-i18n="labelCPAPath">(Certificate File Path หรือ Endpoint URL)</span></label>
+                        <input class="input" id="newCPAPath" placeholder="เช่น /certs/company.p12 หรือ https://host/cpa" data-i18n-ph="phCPAPath">
+                    </div>
+                    <div class="form-row">
+                        <label>Expired Date</label>
+                        <input class="input" id="newCPATo" type="date">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" onclick="cpaWizardBack(2)">← Back</button>
+                    <button class="btn btn-outline" onclick="closeModal('overlayCreateCPA')">Cancel</button>
+                    <button class="btn btn-primary" onclick="cpaWizardNext(2)">Submit → Upload XML</button>
+                </div>
+            </div>
+            <div id="cpaWizardStep3" style="display:none">
+                <div class="modal-body" style="gap:16px">
+                    <div style="background:linear-gradient(135deg,#eff6ff,#e0f2fe);border:1px solid #bae6fd;border-radius:10px;padding:14px 16px;font-size:12px;color:#0c4a6e;display:flex;gap:10px;align-items:flex-start">
+                        <span style="font-size:18px;flex-shrink:0">📋</span>
+                        <div>
+                            <div style="font-weight:700;margin-bottom:3px" data-i18n="cpaXMLTestTitle">ทดสอบการส่ง XML ให้กรมสรรพากร</div>
+                            <div style="line-height:1.6" data-i18n="cpaXMLTestDesc">อัปโหลดไฟล์ XML ทดสอบ 4 ประเภทที่กรมสรรพากรกำหนด เพื่อยืนยันว่าระบบสามารถส่งข้อมูล e-Tax Invoice ได้ถูกต้อง</div>
+                        </div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:10px">
+                        <div style="border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:12px;background:#fafbfc">
+                            <div style="width:36px;height:36px;background:#dbeafe;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#1d4ed8;flex-shrink:0">TIV</div>
+                            <div style="flex:1">
+                                <div style="font-size:13px;font-weight:600;color:var(--text)" data-i18n="xmlTIVName">Tax Invoice / ใบกำกับภาษี</div>
+                                <div style="font-size:11px;color:var(--text3);margin-top:2px" data-i18n="xmlTIVDesc">ไฟล์ XML ใบกำกับภาษีสำหรับทดสอบ</div>
+                            </div>
+                            <label style="cursor:pointer;font-weight:400">
+              <input type="file" id="xmlTIV" accept=".xml" style="display:none" onchange="onXmlUpload(this,'labelTIV')">
+              <span id="labelTIV" class="btn btn-outline btn-sm" style="pointer-events:none" data-i18n="btnChooseFile">📂 เลือกไฟล์</span>
+            </label>
+                        </div>
+
+                        <div style="border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:12px;background:#fafbfc">
+                            <div style="width:36px;height:36px;background:#dcfce7;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#15803d;flex-shrink:0">DBN</div>
+                            <div style="flex:1">
+                                <div style="font-size:13px;font-weight:600;color:var(--text)" data-i18n="xmlDBNName">Debit Note / ใบเพิ่มหนี้</div>
+                                <div style="font-size:11px;color:var(--text3);margin-top:2px" data-i18n="xmlDBNDesc">ไฟล์ XML ใบเพิ่มหนี้สำหรับทดสอบ</div>
+                            </div>
+                            <label style="cursor:pointer;font-weight:400">
+              <input type="file" id="xmlDBN" accept=".xml" style="display:none" onchange="onXmlUpload(this,'labelDBN')">
+              <span id="labelDBN" class="btn btn-outline btn-sm" style="pointer-events:none" data-i18n="btnChooseFile">📂 เลือกไฟล์</span>
+            </label>
+                        </div>
+
+                        <div style="border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:12px;background:#fafbfc">
+                            <div style="width:36px;height:36px;background:#fef9c3;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#854d0e;flex-shrink:0">CDN</div>
+                            <div style="flex:1">
+                                <div style="font-size:13px;font-weight:600;color:var(--text)" data-i18n="xmlCDNName">Credit Note / ใบลดหนี้</div>
+                                <div style="font-size:11px;color:var(--text3);margin-top:2px" data-i18n="xmlCDNDesc">ไฟล์ XML ใบลดหนี้สำหรับทดสอบ</div>
+                            </div>
+                            <label style="cursor:pointer;font-weight:400">
+              <input type="file" id="xmlCDN" accept=".xml" style="display:none" onchange="onXmlUpload(this,'labelCDN')">
+              <span id="labelCDN" class="btn btn-outline btn-sm" style="pointer-events:none" data-i18n="btnChooseFile">📂 เลือกไฟล์</span>
+            </label>
+                        </div>
+
+                        <div style="border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:12px;background:#fafbfc">
+                            <div style="width:36px;height:36px;background:#f3e8ff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#7e22ce;flex-shrink:0">RCT</div>
+                            <div style="flex:1">
+                                <div style="font-size:13px;font-weight:600;color:var(--text)" data-i18n="xmlRCTName">Receipt / ใบรับ</div>
+                                <div style="font-size:11px;color:var(--text3);margin-top:2px" data-i18n="xmlRCTDesc">ไฟล์ XML ใบรับสำหรับทดสอบ</div>
+                            </div>
+                            <label style="cursor:pointer;font-weight:400">
+              <input type="file" id="xmlRCT" accept=".xml" style="display:none" onchange="onXmlUpload(this,'labelRCT')">
+              <span id="labelRCT" class="btn btn-outline btn-sm" style="pointer-events:none" data-i18n="btnChooseFile">📂 เลือกไฟล์</span>
+            </label>
+                        </div>
+                    </div>
+                    <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:11px;color:#92400e;display:flex;gap:8px;align-items:flex-start">
+                        <span style="flex-shrink:0">💡</span>
+                        <span data-i18n-html="cpaConfirmNote">กด <strong>Confirm Upload</strong> เพื่อบันทึก CPA ลงในระบบ — ไม่จำเป็นต้องอัปโหลดครบทุกประเภทก็ได้ สามารถเพิ่มภายหลังได้</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" onclick="cpaWizardBack(3)">← Back</button>
+                    <button class="btn btn-outline" onclick="closeModal('overlayCreateCPA')">Cancel</button>
+                    <button class="btn btn-success" onclick="createCPA()">✔ Confirm Upload &amp; Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View CPA -->
+    <div class="overlay" id="overlayViewCPA">
+        <div class="modal" style="width:680px">
+            <div class="modal-header">
+                <span class="modal-title" style="display:flex;align-items:center;gap:7px"><svg class="si si-md" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="5.5"/><path d="M21 2l-9.6 9.6M15.5 7.5l3 3"/></svg> CPA Detail</span>
+                <button class="close-btn" onclick="closeModal('overlayViewCPA')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                    <div class="form-row"><label>Company</label><input class="input input-readonly" id="viewCPAComp" readonly></div>
+                    <div class="form-row"><label>Tax ID</label><input class="input input-readonly mono" id="viewCPATax" readonly></div>
+                    <div class="form-row"><label>CPA Expire Date</label><input class="input input-readonly" id="viewCPAExpire" readonly></div>
+                    <div class="form-row"><label>Status</label><input class="input input-readonly" id="viewCPAStatus" readonly></div>
+                    <div class="form-row"><label>Days Remaining</label><input class="input input-readonly" id="viewCPADays" readonly></div>
+                    <div class="form-row"><label>Created Date</label><input class="input input-readonly" id="viewCPACreated" readonly></div>
+                    <div class="form-row"><label>Updated Date</label><input class="input input-readonly" id="viewCPAUpdated" readonly></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register CPA Wizard Modal -->
+    <div class="overlay" id="overlayRegisterCPA">
+        <div class="modal" style="width:640px;max-height:88vh">
+            <div class="modal-header">
+                <div>
+                    <span class="modal-title" id="cpaWizardTitle" style="display:flex;align-items:center;gap:7px"><svg class="si si-md" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg> Register CPA</span>
+                    <div style="display:flex;gap:0;margin-top:10px">
+                        <div class="wizard-step" id="ws1">
+                            <div class="wizard-dot active" id="wd1">1</div>
+                            <span class="wizard-label" data-i18n="wizLabel1">นัดหมาย RD</span>
+                        </div>
+                        <div class="wizard-line" id="wl1"></div>
+                        <div class="wizard-step" id="ws2">
+                            <div class="wizard-dot" id="wd2">2</div>
+                            <span class="wizard-label">Register UAT</span>
+                        </div>
+                        <div class="wizard-line" id="wl2"></div>
+                        <div class="wizard-step" id="ws3">
+                            <div class="wizard-dot" id="wd3">3</div>
+                            <span class="wizard-label">Upload XML</span>
+                        </div>
+                        <div class="wizard-line" id="wl3"></div>
+                        <div class="wizard-step" id="ws4">
+                            <div class="wizard-dot" id="wd4">4</div>
+                            <span class="wizard-label">Register PROD</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="close-btn" onclick="closeModal('overlayRegisterCPA')">✕</button>
+            </div>
+
+            <!-- Step 1: นัดหมายกับ RD -->
+            <div id="cpaStep1" class="modal-body" style="gap:14px">
+                <div style="background:var(--primary-dim);border:1px solid rgba(26,86,219,.15);border-radius:10px;padding:16px 18px">
+                    <div style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:10px" data-i18n-html="regStep1Title">📌 ขั้นตอนการขอ CPA กับกรมสรรพากร (Host to Host)</div>
+                    <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--text2)">
+                        <div style="display:flex;gap:10px;align-items:flex-start"><span style="background:var(--primary);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">1</span><span data-i18n="regStep1_1">ยื่นหนังสือแจ้งความประสงค์ขอเชื่อมต่อระบบ Host to Host ที่กองบริหารการเสียภาษีทางอิเล็กทรอนิกส์ ชั้น 21</span></div>
+                        <div style="display:flex;gap:10px;align-items:flex-start"><span style="background:var(--primary);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">2</span><span data-i18n="regStep1_2">กรมสรรพากรพิจารณาคุณสมบัติและแจ้งผลทางอีเมล (บ.อ.01)</span></div>
+                        <div style="display:flex;gap:10px;align-items:flex-start"><span style="background:var(--primary);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">3</span><span data-i18n-html="regStep1_3">บันทึก IP Address, Endpoint, SSL Certificate ที่ <strong>https://etax.rd.go.th</strong></span></div>
+                        <div style="display:flex;gap:10px;align-items:flex-start"><span style="background:var(--primary);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">4</span><span data-i18n="regStep1_4">รับอีเมล CPA ทดสอบ (UAT) จากกรมสรรพากรพร้อมรหัสนำส่ง เพื่อทดสอบการส่ง XML ทั้ง 4 ประเภท</span></div>
+                        <div style="display:flex;gap:10px;align-items:flex-start"><span style="background:var(--primary);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">5</span><span data-i18n="regStep1_5">เมื่อผ่านการทดสอบ รับ CPA Production จากกรมสรรพากรและเริ่ม GO LIVE</span></div>
+                    </div>
+                </div>
+                <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 14px;font-size:12px;color:#166534">
+                    <span data-i18n-html="regDocHint">💡 <strong>เตรียมเอกสาร:</strong> หนังสือรับรองบริษัท, บัตรประชาชนผู้มีอำนาจ, ตราประทับบริษัท, ใบ ภ.พ.01 และข้อมูลระบบ IT</span>
+                </div>
+                <div class="form-row"><label>Company <span style="color:var(--danger)">*</span></label>
+                    <select class="select" id="cpaApptCompany">
+          <option value="">— Select Company —</option>
+        </select>
+                </div>
+                <div class="form-row">
+                    <label data-i18n="labelApptDate">วันที่นัดหมาย (ข้อมูลอ้างอิง)</label>
+                    <input class="input" id="cpaApptDate" type="date" placeholder="วันที่นัดหมายกับ RD" data-i18n-ph="phApptDate">
+                </div>
+            </div>
+            <div id="cpaStep1Footer" class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('overlayRegisterCPA')">Cancel</button>
+                <button class="btn btn-primary" onclick="cpaWizardNext(1)">Next → Register UAT</button>
+            </div>
+
+            <!-- Step 2: Register CPA UAT -->
+            <div id="cpaStep2" class="modal-body" style="display:none;gap:14px">
+                <div style="background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:10px 14px;font-size:12px;color:#713f12">
+                    <span data-i18n-html="regUATHeader">🧪 <strong>UAT Environment</strong> — กรอกข้อมูล CPA สำหรับทดสอบที่ได้รับจากกรมสรรพากร</span>
+                </div>
+                <div class="form-row"><label>Company <span style="color:var(--danger)">*</span></label>
+                    <input class="input input-readonly" id="cpaUATCompany" readonly placeholder="Auto-filled from Step 1">
+                </div>
+                <div class="form-row"><label>Certificate (.xml) <span style="color:var(--danger)">*</span></label>
+                    <input class="input" id="cpaUATPath" placeholder="เช่น /certs/uat/company_uat.xml" data-i18n-ph="phUATPath">
+                </div>
+                <div class="form-row"><label>Certificate Location <span style="color:var(--danger)">*</span></label>
+                    <select class="select" id="cpaUATLocation">
+                        <option value="">— Select Location —</option>
+                        <option value="Storage">Storage</option>
+                        <option value="AWS Secret Manager">AWS Secret Manager</option>
+                    </select>
+                </div>
+                <div class="form-row" style="flex-direction:column;gap:6px">
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                        <label style="margin:0" data-i18n="labelNote">หมายเหตุ</label>
+                        <div style="display:flex;gap:6px">
+                            <button id="editBtn2" class="btn btn-ghost btn-sm" onclick="editStep(2)"><svg class="si si-sm" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg> Edit</button>
+                            <button id="saveBtn2" class="btn btn-success btn-sm" onclick="saveStep(2)" style="display:none"><svg class="si si-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save</button>
+                        </div>
+                    </div>
+                    <textarea class="input input-readonly" id="cpaUATNote" rows="2" placeholder="หมายเหตุ..." data-i18n-ph="phNote" style="resize:vertical" readonly oninput="syncCPANote(this)"></textarea>
+                </div>
+            </div>
+            <div id="cpaStep2Footer" class="modal-footer" style="display:none">
+                <button class="btn btn-outline" onclick="cpaWizardBack(1)">← Back</button>
+                <button class="btn btn-primary" onclick="cpaWizardNext(2)">Submit → Upload XML</button>
+            </div>
+
+            <!-- Step 3: Upload XML -->
+            <div id="cpaStep3" class="modal-body" style="display:none;gap:14px">
+                <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;font-size:12px;color:#166534">
+                    <span data-i18n-html="regUATDone">✅ <strong>Register UAT สำเร็จ!</strong> — ทดสอบส่ง XML ทั้ง 4 ประเภทให้ครบก่อนดำเนินการต่อ</span>
+                </div>
+                <!-- XML Type Description -->
+                <div style="border:1px solid var(--border);border-radius:10px;padding:12px 14px;background:var(--bg2)">
+                    <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:8px" data-i18n-html="reg4XMLTypes">📋 XML ที่ต้องส่งทดสอบ 4 ประเภท</div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                        <div style="display:flex;gap:8px;align-items:flex-start;font-size:11px;color:var(--text2)">
+                            <span style="background:var(--primary);color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">TIV</span>
+                            <span data-i18n="xmlTIVFull">Tax Invoice / ใบกำกับภาษีอิเล็กทรอนิกส์</span>
+                        </div>
+                        <div style="display:flex;gap:8px;align-items:flex-start;font-size:11px;color:var(--text2)">
+                            <span style="background:#f59e0b;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">DBN</span>
+                            <span data-i18n="xmlDBNFull">Debit Note / ใบเพิ่มหนี้อิเล็กทรอนิกส์</span>
+                        </div>
+                        <div style="display:flex;gap:8px;align-items:flex-start;font-size:11px;color:var(--text2)">
+                            <span style="background:#8b5cf6;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">CDN</span>
+                            <span data-i18n="xmlCDNFull">Credit Note / ใบลดหนี้อิเล็กทรอนิกส์</span>
+                        </div>
+                        <div style="display:flex;gap:8px;align-items:flex-start;font-size:11px;color:var(--text2)">
+                            <span style="background:#10b981;color:#fff;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700;flex-shrink:0">RCT</span>
+                            <span data-i18n="xmlRCTFull">Receipt / ใบรับอิเล็กทรอนิกส์</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload Single -->
+                <div style="display:flex;flex-direction:column;gap:6px">
+                    <div style="font-size:12px;font-weight:600;color:var(--text2)" data-i18n="uploadXMLTitle">อัปโหลดไฟล์ XML</div>
+                    <div id="xml-upload-row" style="display:flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:8px;padding:10px 14px;transition:border-color .2s">
+                        <svg id="xml-upload-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        <div style="flex:1;min-width:0">
+                            <div id="xml-single-name" style="font-size:12px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" data-i18n="noFileSelected">ยังไม่ได้เลือกไฟล์ (.xml)</div>
+                            <div id="xml-upload-progress" style="display:none;margin-top:4px">
+                                <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden">
+                                    <div id="xml-progress-bar" style="height:100%;width:0%;background:var(--primary);border-radius:2px;transition:width .1s linear"></div>
+                                </div>
+                                <div id="xml-progress-label" style="font-size:10px;color:var(--text3);margin-top:3px">กำลังส่ง... 0%</div>
+                            </div>
+                        </div>
+                        <button id="xml-upload-btn" class="btn btn-ghost btn-sm" onclick="simulateXMLUpload()"><svg class="si si-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Upload</button>
+                    </div>
+                </div>
+
+                <!-- Results Table -->
+                <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden">
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:var(--bg2);border-bottom:1px solid var(--border)">
+                        <span style="font-size:12px;font-weight:600;color:var(--text)" data-i18n="xmlResultTitle">ผลการส่ง XML</span>
+                        <div style="display:flex;gap:6px">
+                            <button class="btn btn-ghost btn-sm" onclick="refreshXMLResults()"><svg class="si si-sm" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Refresh</button>
+                            <button class="btn btn-ghost btn-sm" id="xmlExportBtn" onclick="exportXMLResults()"><svg class="si si-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export</button>
+                        </div>
+                    </div>
+                    <div style="overflow-x:auto;max-height:200px;overflow-y:auto">
+                        <table style="width:100%;border-collapse:collapse;font-size:11px">
+                            <thead style="position:sticky;top:0;z-index:1">
+                                <tr style="background:var(--bg2);border-bottom:1px solid var(--border)">
+                                    <th style="padding:7px 8px;text-align:center;width:30px"><input type="checkbox" id="xmlSelectAll" onchange="toggleSelectAllXML(this)"></th>
+                                    <th style="padding:7px 8px;text-align:left;white-space:nowrap">Conversation ID</th>
+                                    <th style="padding:7px 8px;text-align:left;white-space:nowrap">Invoice ID</th>
+                                    <th style="padding:7px 8px;text-align:center;width:40px">Type</th>
+                                    <th style="padding:7px 8px;text-align:left">Status</th>
+                                    <th style="padding:7px 8px;text-align:center">Response</th>
+                                    <th style="padding:7px 8px;text-align:left;white-space:nowrap">Last Status Change</th>
+                                    <th style="padding:7px 8px;text-align:center">View</th>
+                                </tr>
+                            </thead>
+                            <tbody id="xmlResultBody">
+                                <tr><td colspan="8" style="text-align:center;padding:18px;color:var(--text3);font-size:11px" data-i18n="xmlNoResult">ยังไม่มีข้อมูล — อัปโหลดไฟล์และกด Submit เพื่อดูผล</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="form-row" style="flex-direction:column;gap:6px">
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                        <label style="margin:0" data-i18n="labelNote">หมายเหตุ</label>
+                        <div style="display:flex;gap:6px">
+                            <button id="editBtn3" class="btn btn-ghost btn-sm" onclick="editStep(3)"><svg class="si si-sm" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg> Edit</button>
+                            <button id="saveBtn3" class="btn btn-success btn-sm" onclick="saveStep(3)" style="display:none"><svg class="si si-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save</button>
+                        </div>
+                    </div>
+                    <textarea class="input input-readonly" id="cpaXMLNote" rows="2" placeholder="หมายเหตุ..." data-i18n-ph="phNote" style="resize:vertical" readonly oninput="syncCPANote(this)"></textarea>
+                </div>
+            </div>
+            <div id="cpaStep3Footer" class="modal-footer" style="display:none">
+                <button class="btn btn-outline" onclick="cpaWizardBack(2)">← Back</button>
+                <button class="btn btn-primary" onclick="submitXMLTest()"><svg class="si si-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Submit XML Test</button>
+            </div>
+
+            <!-- Step 4: Register CPA PROD -->
+            <div id="cpaStep4" class="modal-body" style="display:none;gap:14px">
+                <div style="background:var(--danger-dim);border:1px solid rgba(224,36,36,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--danger)">
+                    <span data-i18n-html="regPRODHeader">🚀 <strong>PRODUCTION Environment</strong> — CPA สำหรับใช้งานจริง กรุณาตรวจสอบข้อมูลให้ถูกต้อง</span>
+                </div>
+                <div class="form-row"><label>Company <span style="color:var(--danger)">*</span></label>
+                    <input class="input input-readonly" id="cpaPRODCompany" readonly>
+                </div>
+                <div class="form-row"><label>Certificate (.xml) <span style="color:var(--danger)">*</span></label>
+                    <input class="input" id="cpaPRODPath" placeholder="เช่น /certs/prod/company_prod.xml" data-i18n-ph="phPRODPath">
+                </div>
+                <div class="form-row"><label>Certificate Location <span style="color:var(--danger)">*</span></label>
+                    <select class="select" id="cpaPRODLocation">
+                        <option value="">— Select Location —</option>
+                        <option value="Storage">Storage</option>
+                        <option value="AWS Secret Manager">AWS Secret Manager</option>
+                    </select>
+                </div>
+                <div class="form-row" style="flex-direction:column;gap:6px">
+                    <div style="display:flex;justify-content:space-between;align-items:center">
+                        <label style="margin:0" data-i18n="labelNote">หมายเหตุ</label>
+                        <div style="display:flex;gap:6px">
+                            <button id="editBtn4" class="btn btn-ghost btn-sm" onclick="editStep(4)"><svg class="si si-sm" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg> Edit</button>
+                            <button id="saveBtn4" class="btn btn-success btn-sm" onclick="saveStep(4)" style="display:none"><svg class="si si-sm" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save</button>
+                        </div>
+                    </div>
+                    <textarea class="input input-readonly" id="cpaPRODNote" rows="2" placeholder="หมายเหตุ..." data-i18n-ph="phNote" style="resize:vertical" readonly oninput="syncCPANote(this)"></textarea>
+                </div>
+            </div>
+            <div id="cpaStep4Footer" class="modal-footer" style="display:none">
+                <button class="btn btn-outline" onclick="cpaWizardBack(3)">← Back</button>
+                <button class="btn btn-success" onclick="submitPROD()">🚀 Register PROD CPA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- XML Validation Warning Modal -->
+    <div class="overlay" id="overlayXMLWarning" style="z-index:300">
+        <div style="background:#fff;border-radius:12px;width:420px;box-shadow:0 4px 24px rgba(0,0,0,.14);overflow:hidden;animation:modalIn .18s ease">
+            <div style="height:4px;background:#e02424"></div>
+            <div style="padding:20px 22px 0">
+                <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px">
+                    <div style="width:36px;height:36px;border-radius:8px;background:rgba(224,36,36,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e02424" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px" data-i18n="xmlWarnTitle">ไม่สามารถ Submit ได้</div>
+                        <div style="font-size:12.5px;color:var(--text2);line-height:1.5" data-i18n="xmlWarnDesc">ไฟล์ XML ต้องผ่านการ Accepted จาก RD ครบทั้ง 4 ประเภท</div>
+                    </div>
+                </div>
+                <div style="font-size:11.5px;font-weight:600;color:var(--text3);letter-spacing:.4px;text-transform:uppercase;margin-bottom:8px" data-i18n="xmlWarnFileStatus">สถานะไฟล์แต่ละประเภท</div>
+                <div id="xmlWarningList" style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px"></div>
+            </div>
+            <div style="display:flex;justify-content:flex-end;padding:12px 20px;border-top:1px solid var(--border);background:#f8fafc">
+                <button onclick="closeModal('overlayXMLWarning')" data-i18n="btnAcknowledge" style="padding:8px 22px;border-radius:6px;border:none;background:#e02424;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">รับทราบ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Status Modal -->
+    <div class="overlay" id="overlayConfirmStatus">
+        <div style="background:#fff;border-radius:12px;width:360px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,.13);animation:modalIn .18s ease">
+            <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:16px">
+                <div id="confirmStatusIconWrap" style="width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">
+                    <svg id="confirmStatusIconSvg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></svg>
+                </div>
+                <div style="flex:1">
+                    <div id="confirmStatusTitle" style="font-size:14.5px;font-weight:700;color:var(--text);margin-bottom:4px;line-height:1.3"></div>
+                    <div id="confirmStatusMsg" style="font-size:13px;color:var(--text2);line-height:1.55"></div>
+                </div>
+                <button onclick="cancelStatusConfirm()" style="background:none;border:none;cursor:pointer;color:var(--text3);font-size:15px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:5px;flex-shrink:0;transition:background .12s">✕</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:11px 14px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);margin-bottom:20px">
+                <span id="confirmStatusFrom" style="font-size:12.5px;font-weight:600;padding:2px 10px;border-radius:4px"></span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                <span id="confirmStatusTo" style="font-size:12.5px;font-weight:600;padding:2px 10px;border-radius:4px"></span>
+            </div>
+            <div style="display:flex;gap:8px">
+                <button onclick="cancelStatusConfirm()" data-i18n="btnCancel" style="flex:1;padding:9px 0;border-radius:7px;border:1px solid var(--border2);background:#fff;color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">ยกเลิก</button>
+                <button id="confirmStatusBtn" onclick="doStatusConfirm()" data-i18n="btnConfirm" style="flex:1;padding:9px 0;border-radius:7px;border:none;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" style="position:fixed;bottom:24px;right:24px;background:#fff;border:1px solid var(--border);border-left:3px solid var(--accent);padding:12px 18px;border-radius:8px;font-size:13px;color:var(--text);box-shadow:0 8px 24px rgba(0,0,0,.12);transform:translateY(80px);opacity:0;transition:all .25s;z-index:9999;display:flex;align-items:center;gap:8px"></div>
+
+    <!-- Export Generating Modal -->
+    <div id="exportGeneratingModal" style="display:none">
+        <div class="export-generating-overlay" onclick="void(0)">
+            <div class="export-generating-box">
+                <div class="export-spinner"></div>
+                <div class="export-gen-title" data-i18n="exportGenTitle">กำลัง Export...</div>
+                <div class="export-gen-sub" data-i18n="exportGenSub">โปรดรอสักครู่</div>
+                <div class="export-gen-bar"><div class="export-gen-fill"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- XML Error Popup (Step 3 Invalid) -->
+    <div class="overlay" id="overlayXMLError">
+        <div class="modal" style="width:580px">
+            <div class="modal-header" style="background:#fff1f2;border-bottom:1px solid #fecdd3">
+                <div>
+                    <span class="modal-title" style="color:var(--danger)">⚠ XML Test Failed — Edit &amp; Resubmit</span>
+                    <div style="font-size:12px;color:#7f1d1d;margin-top:3px">Company: <strong id="xmlErrCompany">—</strong></div>
+                </div>
+                <button class="close-btn" onclick="closeModal('overlayXMLError')">✕</button>
+            </div>
+            <div class="modal-body" style="gap:14px">
+                <!-- Error detail box -->
+                <div style="background:#fff1f2;border:1px solid #fecdd3;border-radius:8px;padding:12px 14px;font-size:12px;line-height:1.6" id="xmlErrMsg">
+                    <span data-i18n="xmlErrSubtitle">กรุณาตรวจสอบและแก้ไขข้อมูลที่มีปัญหา</span>
+                </div>
+                <!-- Upload grid with error labels -->
+                <div style="font-size:12px;font-weight:600;color:var(--text2)" data-i18n="xmlErrUploadLabel">📁 อัปโหลด XML ที่แก้ไขแล้ว (กล่องสีแดง = มีข้อผิดพลาด)</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                    <div id="xmlErrTIV" style="border:2px dashed var(--border2);border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:all .15s" onclick="triggerXMLEdit('TIV')">
+                        <div style="font-size:20px;margin-bottom:4px">📄</div>
+                        <div style="font-size:12px;font-weight:700;color:var(--text)">TIV<span class="xml-err-label" id="xmlErrLabel_TIV"></span></div>
+                        <div style="font-size:10px;color:var(--text3)" data-i18n="docTIVTH">ใบกำกับภาษี</div>
+                        <input type="file" id="xmlTIVedit" accept=".xml" style="display:none" onchange="markXMLEdit(this,'xmlErrTIVChk')">
+                        <div id="xmlErrTIVChk" style="font-size:10px;color:var(--accent);margin-top:4px;min-height:14px"></div>
+                    </div>
+                    <div id="xmlErrDBN" style="border:2px dashed var(--border2);border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:all .15s" onclick="triggerXMLEdit('DBN')">
+                        <div style="font-size:20px;margin-bottom:4px">📋</div>
+                        <div style="font-size:12px;font-weight:700;color:var(--text)">DBN<span class="xml-err-label" id="xmlErrLabel_DBN"></span></div>
+                        <div style="font-size:10px;color:var(--text3)" data-i18n="docDBNTH">ใบเพิ่มหนี้</div>
+                        <input type="file" id="xmlDBNedit" accept=".xml" style="display:none" onchange="markXMLEdit(this,'xmlErrDBNChk')">
+                        <div id="xmlErrDBNChk" style="font-size:10px;color:var(--accent);margin-top:4px;min-height:14px"></div>
+                    </div>
+                    <div id="xmlErrCDN" style="border:2px dashed var(--border2);border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:all .15s" onclick="triggerXMLEdit('CDN')">
+                        <div style="font-size:20px;margin-bottom:4px">📝</div>
+                        <div style="font-size:12px;font-weight:700;color:var(--text)">CDN<span class="xml-err-label" id="xmlErrLabel_CDN"></span></div>
+                        <div style="font-size:10px;color:var(--text3)" data-i18n="docCDNTH">ใบลดหนี้</div>
+                        <input type="file" id="xmlCDNedit" accept=".xml" style="display:none" onchange="markXMLEdit(this,'xmlErrCDNChk')">
+                        <div id="xmlErrCDNChk" style="font-size:10px;color:var(--accent);margin-top:4px;min-height:14px"></div>
+                    </div>
+                    <div id="xmlErrRCT" style="border:2px dashed var(--border2);border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:all .15s" onclick="triggerXMLEdit('RCT')">
+                        <div style="font-size:20px;margin-bottom:4px">🧾</div>
+                        <div style="font-size:12px;font-weight:700;color:var(--text)">RCT<span class="xml-err-label" id="xmlErrLabel_RCT"></span></div>
+                        <div style="font-size:10px;color:var(--text3)" data-i18n="docRCTTH">ใบรับ</div>
+                        <input type="file" id="xmlRCTedit" accept=".xml" style="display:none" onchange="markXMLEdit(this,'xmlErrRCTChk')">
+                        <div id="xmlErrRCTChk" style="font-size:10px;color:var(--accent);margin-top:4px;min-height:14px"></div>
+                    </div>
+                </div>
+                <div style="background:var(--surface2);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--text3)">
+                    <span data-i18n="xmlErrHint">💡 อัปโหลดเฉพาะไฟล์ที่มีข้อผิดพลาด (กล่องสีแดง) หรืออัปโหลดทุกไฟล์ใหม่ก็ได้</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('overlayXMLError')">Cancel</button>
+                <button class="btn btn-success" onclick="resubmitXML()">📤 Submit &amp; Retest</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
